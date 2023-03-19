@@ -5,7 +5,7 @@ const StackedBox = ({ data }) => {
     return (
       <>
         {data.map((d,id) => {
-            <IssueBox
+            return <IssueBox
             key={id}
             user={d}
             title={d.title}
