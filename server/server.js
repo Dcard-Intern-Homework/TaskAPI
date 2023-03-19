@@ -31,8 +31,26 @@ app.get('/getAccessToken', async function (req, res) {
 })
 
 
+app.get('/getPrivateIssues', async function (req, res) {
+    console.log("Getting issues...");
+    await fetch("https://api.github.com/search/issues?q=author:YouMingYeh", {
+        method: "GET",
+        headers: {
+            "Authorization": req.get("Authorization"),
+            "Accept": "application/vnd.github+json",
+            'X-GitHub-Api-Version': '2022-11-28'
+          }
+    }).then((response)=>{
+        
+        return response.json()
+    }).then((data)=>{
+        console.log(data)
+        res.json(data)
+    })
+})
+
 app.get('/getUserData', async function (req, res) {
-    req.get("Authorization")
+    console.log("Getting user data...");
     await fetch("https://api.github.com/user", {
         method: "GET",
         headers: {
@@ -45,7 +63,27 @@ app.get('/getUserData', async function (req, res) {
         console.log(data)
         res.json(data)
     })
-})
+    // const userName = req.query.userName; // retrieve user name from query parameter
+    // const url = `https://api.github.com/issues`;
+    // await fetch(url, {
+    //   headers: {
+    //     "Authorization": req.get("Authorization"),
+    //     "Accept": "application/vnd.github+json",
+    //     'X-GitHub-Api-Version': '2022-11-28'
+    //   }
+    // }).then((response) => {
+    //   return response.json();
+    // }).then((data) => {
+    //   console.log(data);
+    //   res.json(data);
+    // }).catch((error) => {
+    //   console.error(error);
+    //   res.status(500).send(error.message);
+    // });
+  });
+  
+  
+
 
 app.listen(4000, function(){
  console.log('listening on http://localhost:4000')
