@@ -1,13 +1,18 @@
 
 import IssueBox from "./components/issueBox";
-const StackedBox = ({ data }) => {
+import {useIssue} from "../hooks/issueContext"
+
+const StackedBox = () => {
     
+  const [issues, setIssues] = useIssue();
+
     return (
       <>
-        {data.map((d,id) => {
+        {issues && issues.map((d,id) => {
             return <IssueBox
             key={id}
-            user={d}
+            setIssues={setIssues}
+            data={d} 
             title={d.title}
             status={d.state}
             body={d.body}

@@ -10,7 +10,6 @@ const theme = createTheme({
 const LoginPage = ({loginWithGithub}) => {
   return (
     <>
-      <p>User is not logged in</p>
       <Button theme={theme}  variant="outlined" onClick={loginWithGithub}>Login with Github</Button>
     </>
   );

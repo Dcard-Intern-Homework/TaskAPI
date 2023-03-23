@@ -5,93 +5,38 @@ import { useTheme, ThemeProvider, createTheme } from '@mui/material/styles';
 import { Button, IconButton, Box } from "@mui/material"
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
-
-const CLIENT_ID = "4b7feddfcd88aa615d89";
+import useUser from './hooks/userContext'
+import useRenderer from "./hooks/renderer";
+import {useIssue} from "./hooks/issueContext"
+import loginWithGithub from "./hooks/auth";
+import Navbar from './components/navbar'
 
 const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
 
 function App() {
-  const [renderer, setRenderer] = useState(false);
-  const [user, setUser] = useState(null);
-  const [issues, setIssues] = useState()
+  const [renderer, setRenderer] = useRenderer();
+  const [user, setUser] = useUser();
+  const [issues, setIssues] = useIssue()
   const theme = useTheme();
   const colorMode = useContext(ColorModeContext);
   
 
-  useEffect(() => {
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const codeParams = urlParams.get("code");
-    console.log(codeParams);
+  
 
-    if (codeParams && localStorage.getItem("access_token") === null) {
-      async function getAccessToken() {
-        await fetch("http://localhost:4000/getAccessToken?code=" + codeParams, {
-          method: "GET",
-        })
-          .then((response) => {
-            return response.json();
-          })
-          .then((data) => {
-            console.log(data);
-            if (data.access_token) {
-              localStorage.setItem("access_token", data.access_token);
-              setRenderer(!renderer);
-            }
-          });
-      }
-      getAccessToken();
-    }
-  }, []);
+  
 
-  async function getUserData() {
-    await fetch("http://localhost:4000/getUserData", {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("access_token"),
-      },
-    })
-      .then((response) => {
-        
-        return response.json();
-      })
-      .then((data) => {
-        setUser(data);
-        console.log(data);
-      });
-  }
-
-
-  async function getPrivateIssues() {
-    
-    await fetch("http://localhost:4000/getPrivateIssues", {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("access_token"),
-      },
-    })
-      .then((response) => {
-        
-        return response.json();
-      })
-      .then((data) => {
-        setIssues(data.items);
-        console.log(data);
-      });
-  }
-
-  function loginWithGithub() {
-    window.location.assign(
-      "https://github.com/login/oauth/authorize?client_id=" + CLIENT_ID
-    );
-  }
 
   function handleLogOut() {
+
     localStorage.removeItem("access_token"); setRenderer(!renderer);
   }
 
+  
+
   return (
+    <>
+    {!renderer&&<Navbar handleLogOut={handleLogOut}></Navbar>}
     <Box
       sx={{
         display: 'flex',
@@ -104,6 +49,7 @@ function App() {
         p: 3,
       }}
     >
+      
       <IconButton sx={{ ml: 1 }} onClick={colorMode.toggleColorMode} color="inherit">
         {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
       </IconButton>
@@ -120,13 +66,14 @@ function App() {
       }}>
         {localStorage.getItem("access_token") ? (
           
-          <MainPage handleLogOut={handleLogOut} getUserData={getUserData} getPrivateIssues={getPrivateIssues} issues={issues}/>
+          <MainPage handleLogOut={handleLogOut}/>
         ) : (
           <LoginPage loginWithGithub={loginWithGithub} />
         )}
       </Box>
       
     </Box>
+    </>
   );
 }
 
