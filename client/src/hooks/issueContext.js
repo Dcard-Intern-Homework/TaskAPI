@@ -20,7 +20,7 @@ async function getPrivateIssues(setIssues) {
 
 
 function useIssue() {
-  const [issues, setIssues] = useState();
+  const [issues, setIssues] = useState([]);
   const [user, setUser] = useUser();
 
   useEffect(() => {
@@ -31,6 +31,7 @@ function useIssue() {
 }
 
 async function updateStatus(data){
+  
   await fetch("http://localhost:4000/patchData", {
     method: "PATCH",
     headers: {
@@ -43,9 +44,10 @@ async function updateStatus(data){
       return response.json();
     })
     .then((data) => {
+      // setIssues(data.items);
       console.log(data);
     });
-    return data;
+    
 }
 
 export {useIssue, updateStatus}

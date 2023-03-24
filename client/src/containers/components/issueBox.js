@@ -9,6 +9,7 @@ import {
   Divider,
   Menu,
   MenuItem,
+  TextField,
 } from "@mui/material";
 
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -19,8 +20,14 @@ import { updateStatus } from "../../hooks/issueContext";
 import { useState, useEffect } from "react";
 const IssueBox = ({ data, title, status, body, setIssues}) => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const [state, setState] = useState(status)
+  const [editTitle, setEditTitle] = useState(title);
+  const [editBody, setEditBody] = useState(body);
+  const [editing, setEditing] = useState(false);
+
+  const open = Boolean(anchorEl); 
+
   
-  const open = Boolean(anchorEl);
 
   function handleClick(event) {
     setAnchorEl(event.currentTarget);
@@ -37,6 +44,7 @@ const IssueBox = ({ data, title, status, body, setIssues}) => {
         display: "flex",
         bgcolor: "background.paper",
         alignItems: "center",
+        margin: 2
       }}
     >
       <Box
@@ -49,7 +57,7 @@ const IssueBox = ({ data, title, status, body, setIssues}) => {
         <Box sx={{ display: "flex", flexDirection: "column", p: 2 }}>
           <CardContent sx={{ width: 500, p: 0 }}>
             <Button variant="outlined" onClick={handleClick}>
-              {status}
+              {state}
             </Button>
             <Menu
               anchorEl={anchorEl}
@@ -62,20 +70,20 @@ const IssueBox = ({ data, title, status, body, setIssues}) => {
             >
               <MenuItem
                 sx={{ color: "gray" }}
-                onClick={async () => {
+                onClick={() => {
                   setAnchorEl(null);
-                  const d = await updateStatus({...data, state: 'open'})
-                  setIssues(prev=>{return {...prev, data}})
+                  updateStatus({...data, state: 'open'})
+                  setState('Open')
                 }}
               >
                 <SquareIcon fontSize="small" /> Open
               </MenuItem>
               <MenuItem
                 sx={{ color: "red" }}
-                onClick={async () => {
+                onClick={() => {
                   setAnchorEl(null);
-                  const d = await updateStatus({...data, state: 'open'});
-                  setIssues(prev=>{return {...prev, data}})
+                  updateStatus({...data, state: 'open'});
+                  setState('In Progress')
                 }}
               >
                 <SquareIcon fontSize="small" />
@@ -83,10 +91,10 @@ const IssueBox = ({ data, title, status, body, setIssues}) => {
               </MenuItem>
               <MenuItem
                 sx={{ color: "green" }}
-                onClick={async () => {
+                onClick={() => {
                   setAnchorEl(null);
-                  const d = await updateStatus({...data, state: 'closed'})
-                  setIssues(prev=>{return {...prev, data}})
+                  updateStatus({...data, state: 'closed'})
+                  setState('Done')
                 }}
               >
                 <SquareIcon fontSize="small" />
@@ -102,15 +110,29 @@ const IssueBox = ({ data, title, status, body, setIssues}) => {
                 flexDirection: "row",
                 alignItems: "center",
                 gap: 1,
+                p:1,
+                height: 50
               }}
             >
               <Avatar>A</Avatar>
-              <Typography variant="h6">{title}</Typography>
+              {editing?
+              <TextField variant="outlined" value={editTitle} onChange={(event)=>{
+                setEditTitle(event.target.value);
+              }}/>
+              :
+              <Typography variant="h6">{editTitle}</Typography>}
             </Box>
-
-            <Typography sx={{ p: 1 }} variant="body1">
-              {body}
+              {
+                editing? <TextField variant="outlined" multiline value={editBody} fullWidth rows={3}onChange={(event)=>{
+                  setEditBody(event.target.value);
+                }}/>
+                :
+                <Typography sx={{ p: 1 }} variant="body1">
+              {editBody}
             </Typography>
+                
+              }
+            
           </CardContent>
         </Box>
         <Box
@@ -142,8 +164,14 @@ const IssueBox = ({ data, title, status, body, setIssues}) => {
                 size="medium"
                 startIcon={<EditIcon />}
                 sx={{ color: "gray" }}
+                onClick={()=>{
+                  if(editing){
+                    updateStatus({...data, title: editTitle, body: editBody})
+                  }
+                  setEditing(!editing);
+                }}
               >
-                Edit
+                {editing? 'Complete' : 'Edit'}
               </Button>
               <Button
                 size="medium"

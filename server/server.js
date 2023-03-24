@@ -7,7 +7,7 @@ var bodyParser = require('body-parser')
 
 const CLIENT_ID = "4b7feddfcd88aa615d89"
 const CLIENT_SECRET = "f7385cd8126984315aee792b2f2c38add8c759f4"
-const API_TOKEN = "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"
+const API_TOKEN = "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"
 var app = express()
 app.use(cors());
 app.use(bodyParser.json());
