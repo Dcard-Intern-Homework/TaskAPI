@@ -40,7 +40,7 @@ app.get("/getPrivateIssues", async function (req, res) {
   console.log("Getting issues...");
   const page = req.query.page;
   await fetch(
-    "https://api.github.com/search/issues?q=author:YouMingYeh& per_page=10&page=" +
+    "https://api.github.com/search/issues?q=author:YouMingYeh&per_page=10&page=" +
       page,
     {
       method: "GET",

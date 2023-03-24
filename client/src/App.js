@@ -7,7 +7,7 @@ import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import useUser from "./hooks/userContext";
 import useRenderer from "./hooks/renderer";
-import { useIssue } from "./hooks/issueContext";
+import { handleScroll, useIssue } from "./hooks/issueContext";
 import loginWithGithub from "./hooks/auth";
 import Navbar from "./components/navbar";
 
@@ -26,7 +26,7 @@ function App() {
   }
 
   return (
-    <>
+    <div onScroll={(event)=>{handleScroll(event, issues, setIssues)}}>
       {!renderer && <Navbar handleLogOut={handleLogOut}></Navbar>}
       <Box
         sx={{
@@ -71,7 +71,7 @@ function App() {
           )}
         </Box>
       </Box>
-    </>
+    </div>
   );
 }
 
