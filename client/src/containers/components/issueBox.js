@@ -10,6 +10,7 @@ import {
   Menu,
   MenuItem,
   TextField,
+  Modal,
 } from "@mui/material";
 
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -18,17 +19,15 @@ import SquareIcon from "@mui/icons-material/Square";
 import { updateStatus } from "../../hooks/issueContext";
 
 import { useState, useEffect } from "react";
-const IssueBox = ({ data, title, status, body, labels}) => {
-  console.log(labels[0])
+const IssueBox = ({ data, title, status, body, labels }) => {
   const [anchorEl, setAnchorEl] = useState(null);
-  const [state, setState] = useState(labels[0]?labels[0].name : "Open")
+  const [state, setState] = useState(labels[0] ? labels[0].name : "Open");
   const [editTitle, setEditTitle] = useState(title);
   const [editBody, setEditBody] = useState(body);
   const [editing, setEditing] = useState(false);
-
-  const open = Boolean(anchorEl); 
-
-  
+  const [deleted, setDeleted] = useState(status === "closed");
+  const open = Boolean(anchorEl);
+  const [openModal, setOpenModal] = useState(false);
 
   function handleClick(event) {
     setAnchorEl(event.currentTarget);
@@ -37,15 +36,15 @@ const IssueBox = ({ data, title, status, body, labels}) => {
     setAnchorEl(null);
   }
 
-  
-  
-  return (
+  return deleted ? (
+    <></>
+  ) : (
     <Card
       sx={{
         display: "flex",
         bgcolor: "background.paper",
         alignItems: "center",
-        margin: 2
+        margin: 2,
       }}
     >
       <Box
@@ -73,8 +72,8 @@ const IssueBox = ({ data, title, status, body, labels}) => {
                 sx={{ color: "gray" }}
                 onClick={() => {
                   setAnchorEl(null);
-                  updateStatus({...data, labels: ['Open']})
-                  setState('Open')
+                  updateStatus({ ...data, labels: ["Open"] });
+                  setState("Open");
                 }}
               >
                 <SquareIcon fontSize="small" /> Open
@@ -83,8 +82,8 @@ const IssueBox = ({ data, title, status, body, labels}) => {
                 sx={{ color: "red" }}
                 onClick={() => {
                   setAnchorEl(null);
-                  updateStatus({...data, labels: ['In Progress']});
-                  setState('In Progress')
+                  updateStatus({ ...data, labels: ["In Progress"] });
+                  setState("In Progress");
                 }}
               >
                 <SquareIcon fontSize="small" />
@@ -94,8 +93,8 @@ const IssueBox = ({ data, title, status, body, labels}) => {
                 sx={{ color: "green" }}
                 onClick={() => {
                   setAnchorEl(null);
-                  updateStatus({...data, labels: ['Done']})
-                  setState('Done')
+                  updateStatus({ ...data, labels: ["Done"] });
+                  setState("Done");
                 }}
               >
                 <SquareIcon fontSize="small" />
@@ -111,29 +110,39 @@ const IssueBox = ({ data, title, status, body, labels}) => {
                 flexDirection: "row",
                 alignItems: "center",
                 gap: 1,
-                p:1,
-                height: 50
+                p: 1,
+                height: 50,
               }}
             >
-              <Avatar>A</Avatar>
-              {editing?
-              <TextField variant="outlined" value={editTitle} onChange={(event)=>{
-                setEditTitle(event.target.value);
-              }}/>
-              :
-              <Typography variant="h6">{editTitle}</Typography>}
+              <Avatar src={data.user.avatar_url}>A</Avatar>
+              {editing ? (
+                <TextField
+                  variant="outlined"
+                  value={editTitle}
+                  onChange={(event) => {
+                    setEditTitle(event.target.value);
+                  }}
+                />
+              ) : (
+                <Typography variant="h6">{editTitle}</Typography>
+              )}
             </Box>
-              {
-                editing? <TextField variant="outlined" multiline value={editBody} fullWidth rows={3}onChange={(event)=>{
+            {editing ? (
+              <TextField
+                variant="outlined"
+                multiline
+                value={editBody}
+                fullWidth
+                rows={3}
+                onChange={(event) => {
                   setEditBody(event.target.value);
-                }}/>
-                :
-                <Typography sx={{ p: 1 }} variant="body1">
-              {editBody}
-            </Typography>
-                
-              }
-            
+                }}
+              />
+            ) : (
+              <Typography sx={{ p: 1 }} variant="body1">
+                {editBody}
+              </Typography>
+            )}
           </CardContent>
         </Box>
         <Box
@@ -165,22 +174,71 @@ const IssueBox = ({ data, title, status, body, labels}) => {
                 size="medium"
                 startIcon={<EditIcon />}
                 sx={{ color: "gray" }}
-                onClick={()=>{
-                  if(editing){
-                    updateStatus({...data, title: editTitle, body: editBody})
+                onClick={() => {
+                  if (editing) {
+                    updateStatus({ ...data, title: editTitle, body: editBody });
                   }
                   setEditing(!editing);
                 }}
               >
-                {editing? 'Complete' : 'Edit'}
+                {editing ? "Complete" : "Edit"}
               </Button>
               <Button
                 size="medium"
                 startIcon={<DeleteIcon />}
                 sx={{ color: "red" }}
+                onClick={() => {
+                  setOpenModal(true);
+                }}
               >
                 Delete
               </Button>
+              <Modal
+                open={openModal}
+                onClose={() => {
+                  setOpenModal(false);
+                }}
+                BackdropProps={{ style: { backgroundColor: "white" } }}
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  width: 400,
+                  height: 150,
+                  bgcolor: "white",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: "5px",
+                  boxShadow: 10,
+                }}
+              >
+                <Box>
+                  <Button
+                    onClick={() => {
+                      setDeleted(true);
+                      updateStatus({ ...data, state: "closed" });
+                      setOpenModal(false);
+                    }}
+                    variant="outlined"
+                    color="error"
+                    sx={{ m: 2 }}
+                  >
+                    Click to confirm
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setOpenModal(false);
+                    }}
+                    variant="outlined"
+                    colo="primary"
+                    sx={{ m: 2 }}
+                  >
+                    Cancel
+                  </Button>
+                </Box>
+              </Modal>
             </Paper>
           </CardContent>
         </Box>

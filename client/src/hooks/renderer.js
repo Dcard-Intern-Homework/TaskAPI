@@ -1,6 +1,6 @@
-import { useState } from  'react'
+import { useState } from "react";
 
-export default function useRenderer(){
-    const [renderer, setRenderer] = useState(false)
-    return [renderer, setRenderer]
+export default function useRenderer() {
+  const [renderer, setRenderer] = useState(false);
+  return [renderer, setRenderer];
 }

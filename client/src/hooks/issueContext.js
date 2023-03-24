@@ -17,8 +17,6 @@ async function getPrivateIssues(setIssues) {
     });
 }
 
-
-
 function useIssue() {
   const [issues, setIssues] = useState([]);
   const [user, setUser] = useUser();
@@ -30,15 +28,14 @@ function useIssue() {
   return [issues, setIssues];
 }
 
-async function updateStatus(data){
-  
+async function updateStatus(data) {
   await fetch("http://localhost:4000/patchData", {
     method: "PATCH",
     headers: {
-      "Authorization": "Bearer " + localStorage.getItem("access_token"),
-      "Content-Type": "application/json"
+      Authorization: "Bearer " + localStorage.getItem("access_token"),
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
   })
     .then((response) => {
       return response.json();
@@ -47,8 +44,6 @@ async function updateStatus(data){
       // setIssues(data.items);
       console.log(data);
     });
-    
 }
 
-export {useIssue, updateStatus}
-
+export { useIssue, updateStatus };
