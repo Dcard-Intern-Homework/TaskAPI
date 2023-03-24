@@ -18,9 +18,10 @@ import SquareIcon from "@mui/icons-material/Square";
 import { updateStatus } from "../../hooks/issueContext";
 
 import { useState, useEffect } from "react";
-const IssueBox = ({ data, title, status, body, setIssues}) => {
+const IssueBox = ({ data, title, status, body, labels}) => {
+  console.log(labels[0])
   const [anchorEl, setAnchorEl] = useState(null);
-  const [state, setState] = useState(status)
+  const [state, setState] = useState(labels[0]?labels[0].name : "Open")
   const [editTitle, setEditTitle] = useState(title);
   const [editBody, setEditBody] = useState(body);
   const [editing, setEditing] = useState(false);
@@ -36,7 +37,7 @@ const IssueBox = ({ data, title, status, body, setIssues}) => {
     setAnchorEl(null);
   }
 
-
+  
   
   return (
     <Card
@@ -72,7 +73,7 @@ const IssueBox = ({ data, title, status, body, setIssues}) => {
                 sx={{ color: "gray" }}
                 onClick={() => {
                   setAnchorEl(null);
-                  updateStatus({...data, state: 'open'})
+                  updateStatus({...data, labels: ['Open']})
                   setState('Open')
                 }}
               >
@@ -82,7 +83,7 @@ const IssueBox = ({ data, title, status, body, setIssues}) => {
                 sx={{ color: "red" }}
                 onClick={() => {
                   setAnchorEl(null);
-                  updateStatus({...data, state: 'open'});
+                  updateStatus({...data, labels: ['In Progress']});
                   setState('In Progress')
                 }}
               >
@@ -93,7 +94,7 @@ const IssueBox = ({ data, title, status, body, setIssues}) => {
                 sx={{ color: "green" }}
                 onClick={() => {
                   setAnchorEl(null);
-                  updateStatus({...data, state: 'closed'})
+                  updateStatus({...data, labels: ['Done']})
                   setState('Done')
                 }}
               >

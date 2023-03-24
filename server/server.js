@@ -7,7 +7,7 @@ var bodyParser = require('body-parser')
 
 const CLIENT_ID = "4b7feddfcd88aa615d89"
 const CLIENT_SECRET = "f7385cd8126984315aee792b2f2c38add8c759f4"
-const API_TOKEN = "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"
+const API_TOKEN = "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"
 var app = express()
 app.use(cors());
 app.use(bodyParser.json());
@@ -56,6 +56,7 @@ app.patch('/patchData', async function (req, res) {
         title: data.title,
         body: data.body,
         state: data.state,
+        labels: data.labels
     }
     
     await fetch(data.url, {

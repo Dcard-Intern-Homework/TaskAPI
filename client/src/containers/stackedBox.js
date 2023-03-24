@@ -2,7 +2,7 @@
 import IssueBox from "./components/issueBox";
 
 
-const StackedBox = ({issues, setIssues}) => {
+const StackedBox = ({issues}) => {
     
   
 
@@ -11,11 +11,11 @@ const StackedBox = ({issues, setIssues}) => {
         {Array.isArray(issues) && issues.map((d,id) => {
             return <IssueBox
             key={id}
-            setIssues={setIssues}
             data={d} 
             title={d.title}
             status={d.state}
             body={d.body}
+            labels={d.labels}
           />
         }) 
         }
