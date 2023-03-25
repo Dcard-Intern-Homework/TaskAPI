@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import useUser from "./userContext";
 
-async function getPrivateIssues(setIssues,page) {
-  
+async function getPrivateIssues(issues,setIssues,page) {
+
   await fetch("http://localhost:4000/getPrivateIssues?page="+page, {
     method: "GET",
     headers: {
@@ -13,10 +13,10 @@ async function getPrivateIssues(setIssues,page) {
       return response.json();
     })
     .then((data) => {
-      setIssues((prev)=>{
+      data.items&&setIssues((prev)=>{
         return [...prev,...data.items]
       });
-      
+      console.log(data)
     });
 }
 
@@ -25,6 +25,7 @@ function handleScroll(event, issues, setIssues){
   console.log(target)
   if(target.scrollHeight = target.scrollTop === target.clientHeight){
       getPrivateIssues(setIssues, issues.length / 10 + 1)
+      
   }
 }
 
@@ -34,8 +35,8 @@ function useIssue() {
   
   useEffect(() => {
     
-    getPrivateIssues(setIssues,issues.length / 10 + 1);
-  }, [user]);
+    getPrivateIssues(issues,setIssues,issues.length / 10 + 1);
+  }, []);
   
 
   return [issues, setIssues];
