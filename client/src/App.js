@@ -7,16 +7,20 @@ import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import useUser from "./hooks/userContext";
 import useRenderer from "./hooks/renderer";
-import { handleScroll, useIssue } from "./hooks/issueContext";
 import loginWithGithub from "./hooks/auth";
 import Navbar from "./components/navbar";
+import {
+  IssueContextProvider,
+  handleScroll,
+  useIssueContext,
+} from "./hooks/issueContext";
 
 const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
 function App() {
   const [renderer, setRenderer] = useRenderer();
   const [user, setUser] = useUser();
-  const [issues, setIssues] = useIssue();
+  const {issues, setIssues} = useIssueContext();
   const theme = useTheme();
   const colorMode = useContext(ColorModeContext);
 
@@ -26,7 +30,11 @@ function App() {
   }
 
   return (
-    <div onScroll={(event)=>{handleScroll(event, issues, setIssues)}}>
+    <div
+      onScroll={(event) => {
+        handleScroll(event, issues, setIssues);
+      }}
+    >
       {!renderer && <Navbar handleLogOut={handleLogOut}></Navbar>}
       <Box
         sx={{
@@ -100,7 +108,9 @@ export default function ToggleColorMode() {
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <App />
+        <IssueContextProvider>
+          <App />
+        </IssueContextProvider>
       </ThemeProvider>
     </ColorModeContext.Provider>
   );

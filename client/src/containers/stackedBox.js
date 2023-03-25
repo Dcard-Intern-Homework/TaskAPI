@@ -1,11 +1,12 @@
 import IssueBox from "./components/issueBox";
-import {useState } from 'react'
+import {useState, useEffect } from 'react'
 import ButtonNav from "./components/buttonNav";
 import { Box } from "@mui/material"
-const StackedBox = ({ issues }) => {
-
+import { useIssueContext } from "../hooks/issueContext";
+const StackedBox = () => {
+  const {issues, setIssues, search} = useIssueContext();
+  
   const [filter, setFilter] = useState(0);
-
   
   return (
     <Box >
@@ -30,6 +31,8 @@ const StackedBox = ({ issues }) => {
             else 
               return d;
           }
+        }).filter((d)=>{
+          return d.body.includes(search) === true || d.title.includes(search) === true
         }).map((d, id) => {
           return (
             <IssueBox
@@ -45,5 +48,6 @@ const StackedBox = ({ issues }) => {
     </Box>
   );
 };
+
 
 export default StackedBox;
