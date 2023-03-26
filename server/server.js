@@ -3,11 +3,12 @@ var cors = require("cors");
 const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
 var bodyParser = require("body-parser");
+require('dotenv').config();
+const API_TOKEN = process.env.API_TOKEN
+const CLIENT_SECRET = process.env.CLIENT_SECRET
 
 const CLIENT_ID = "4b7feddfcd88aa615d89";
-const CLIENT_SECRET = "f7385cd8126984315aee792b2f2c38add8c759f4";
-const API_TOKEN =
-  "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";
+
 var app = express();
 app.use(cors());
 app.use(bodyParser.json());
@@ -31,7 +32,7 @@ app.get("/getAccessToken", async function (req, res) {
       return response.json();
     })
     .then((data) => {
-      console.log(data);
+
       res.json(data);
     });
 });
@@ -54,7 +55,7 @@ app.get("/getPrivateIssues", async function (req, res) {
       return response.json();
     })
     .then((data) => {
-      console.log(data);
+
       res.json(data);
     });
 });
@@ -81,10 +82,41 @@ app.patch("/patchData", async function (req, res) {
       return response.json();
     })
     .then((data) => {
-      console.log(data);
+
       res.json(data);
     });
 });
+
+app.post('/createIssue', async function (req, res) {
+    const {owner, repo, title, body, state} = req.body
+    
+    const postBody = {
+        title: title,
+        body: body,
+        labels: [state],
+    }
+
+    
+
+    
+    
+    await fetch(`https://api.github.com/repos/${owner}/${repo}/issues`, {
+        method: 'POST',
+        headers: {
+            Authorization: 'Bearer ' +API_TOKEN,
+            Accept: "application/vnd.github+json"
+        },
+        body: JSON.stringify(postBody)
+    })
+    .then((response) => {
+        
+        return response.json();
+      })
+      .then((data) => {
+
+        res.json(data);
+      });
+})
 
 app.get("/getUserData", async function (req, res) {
   await fetch("https://api.github.com/user", {
@@ -97,7 +129,7 @@ app.get("/getUserData", async function (req, res) {
       return response.json();
     })
     .then((data) => {
-      console.log(data);
+
       res.json(data);
     });
 });
@@ -124,7 +156,7 @@ app.post('/postNewIssue', async function (req, res) {
       return response.json();
     })
     .then((data) => {
-      console.log(data);
+
       res.json(data);
     });
 })
