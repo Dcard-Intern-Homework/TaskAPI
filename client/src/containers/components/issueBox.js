@@ -16,18 +16,14 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import SquareIcon from "@mui/icons-material/Square";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { updateStatus } from "../../hooks/issueContext";
 
 import { useState, useEffect } from "react";
-const IssueBox = ({ data, title, status, body, labels }) => {
+
+function StateButton({ data, labels, state, setState }) {
   const [anchorEl, setAnchorEl] = useState(null);
-  const [state, setState] = useState(labels[0] ? labels[0].name : "Open");
-  const [editTitle, setEditTitle] = useState(title);
-  const [editBody, setEditBody] = useState(body);
-  const [editing, setEditing] = useState(false);
-  const [deleted, setDeleted] = useState(status === "closed");
   const open = Boolean(anchorEl);
-  const [openModal, setOpenModal] = useState(false);
 
   function handleClick(event) {
     setAnchorEl(event.currentTarget);
@@ -35,6 +31,103 @@ const IssueBox = ({ data, title, status, body, labels }) => {
   function handleClose() {
     setAnchorEl(null);
   }
+
+  return (
+    <CardContent sx={{ width: 500, p: 0 }}>
+      <Button variant="outlined" onClick={handleClick}>
+        {state}
+      </Button>
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        <MenuItem
+          sx={{ color: "gray" }}
+          onClick={() => {
+            setAnchorEl(null);
+            updateStatus({ ...data, labels: ["Open"] });
+            setState("Open");
+          }}
+        >
+          <SquareIcon fontSize="small" /> Open
+        </MenuItem>
+        <MenuItem
+          sx={{ color: "red" }}
+          onClick={() => {
+            setAnchorEl(null);
+            updateStatus({ ...data, labels: ["In Progress"] });
+            setState("In Progress");
+          }}
+        >
+          <SquareIcon fontSize="small" />
+          In Progress
+        </MenuItem>
+        <MenuItem
+          sx={{ color: "green" }}
+          onClick={() => {
+            setAnchorEl(null);
+            updateStatus({ ...data, labels: ["Done"] });
+            setState("Done");
+          }}
+        >
+          <SquareIcon fontSize="small" />
+          Done
+        </MenuItem>
+      </Menu>
+    </CardContent>
+  );
+}
+
+function TitleAndBody({ data, editTitle, editBody }) {
+  return (
+    <CardContent sx={{ p: 1 }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 1,
+          p: 1,
+          height: 50,
+        }}
+      >
+        <Avatar src={data.user.avatar_url}></Avatar>
+
+        <Typography variant="h6">{editTitle}</Typography>
+      </Box>
+      <Typography sx={{ p: 1 }} variant="body1">
+        {editBody}
+      </Typography>
+    </CardContent>
+  );
+}
+
+const IssueBox = ({ data, filter }) => {
+  const title = data.title;
+  const status = data.state;
+  const body = data.body;
+  const labels = data.labels;
+
+  const [editTitle, setEditTitle] = useState(title);
+  const [editBody, setEditBody] = useState(body);
+  const [editing, setEditing] = useState(false);
+  const [deleted, setDeleted] = useState(status === "closed");
+  const [state, setState] = useState(labels[0] ? labels[0].name : "Open");
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
+
+  useEffect(() => {
+    setState(labels[0].name);
+    setEditTitle(title);
+    setEditBody(body);
+    setEditing(false);
+    setDeleted(status === "closed");
+  }, [filter]);
 
   return deleted ? (
     <></>
@@ -55,95 +148,13 @@ const IssueBox = ({ data, title, status, body, labels }) => {
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "column", p: 2 }}>
-          <CardContent sx={{ width: 500, p: 0 }}>
-            <Button variant="outlined" onClick={handleClick}>
-              {state}
-            </Button>
-            <Menu
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-            >
-              <MenuItem
-                sx={{ color: "gray" }}
-                onClick={() => {
-                  setAnchorEl(null);
-                  updateStatus({ ...data, labels: ["Open"] });
-                  setState("Open");
-                }}
-              >
-                <SquareIcon fontSize="small" /> Open
-              </MenuItem>
-              <MenuItem
-                sx={{ color: "red" }}
-                onClick={() => {
-                  setAnchorEl(null);
-                  updateStatus({ ...data, labels: ["In Progress"] });
-                  setState("In Progress");
-                }}
-              >
-                <SquareIcon fontSize="small" />
-                In Progress
-              </MenuItem>
-              <MenuItem
-                sx={{ color: "green" }}
-                onClick={() => {
-                  setAnchorEl(null);
-                  updateStatus({ ...data, labels: ["Done"] });
-                  setState("Done");
-                }}
-              >
-                <SquareIcon fontSize="small" />
-                Done
-              </MenuItem>
-            </Menu>
-          </CardContent>
-
-          <CardContent sx={{ p: 1 }}>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 1,
-                p: 1,
-                height: 50,
-              }}
-            >
-              <Avatar src={data.user.avatar_url}>A</Avatar>
-              {editing ? (
-                <TextField
-                  variant="outlined"
-                  value={editTitle}
-                  onChange={(event) => {
-                    setEditTitle(event.target.value);
-                  }}
-                />
-              ) : (
-                <Typography variant="h6">{editTitle}</Typography>
-              )}
-            </Box>
-            {editing ? (
-              <TextField
-                variant="outlined"
-                multiline
-                value={editBody}
-                fullWidth
-                rows={3}
-                onChange={(event) => {
-                  setEditBody(event.target.value);
-                }}
-              />
-            ) : (
-              <Typography sx={{ p: 1 }} variant="body1">
-                {editBody}
-              </Typography>
-            )}
-          </CardContent>
+          <StateButton
+            data={data}
+            labels={labels}
+            state={state}
+            setState={setState}
+          />
+          <TitleAndBody data={data} editTitle={editTitle} editBody={editBody} />
         </Box>
         <Box
           sx={{
@@ -172,31 +183,115 @@ const IssueBox = ({ data, title, status, body, labels }) => {
             >
               <Button
                 size="medium"
+                variant="outlined"
                 startIcon={<EditIcon />}
                 sx={{ color: "gray" }}
                 onClick={() => {
-                  if (editing) {
-                    updateStatus({ ...data, title: editTitle, body: editBody });
-                  }
-                  setEditing(!editing);
+                  setOpenEditModal(true);
+                  setEditing(true);
                 }}
               >
-                {editing ? "Complete" : "Edit"}
+                Edit
               </Button>
+              <Modal
+                open={openEditModal}
+                onClose={() => {
+                  updateStatus({ ...data, title: editTitle, body: editBody });
+                  setOpenEditModal(false);
+                  setEditing(false);
+                }}
+                BackdropProps={{ style: { backgroundColor: "white" } }}
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  width: 500,
+                  height: 300,
+                  bgcolor: "white",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: "5px",
+                  boxShadow: 10,
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexGrow: 1,
+                    flexDirection: "column",
+                    p: 1,
+                  }}
+                >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 1,
+                      p: 1,
+                      height: 100,
+                    }}
+                  >
+                    <Avatar src={data.user.avatar_url}></Avatar>
+                    <TextField
+                      onChange={(event) => {
+                        setEditTitle(event.target.value);
+                      }}
+                      value={editTitle}
+                    />
+                  </Box>
+
+                  <TextField
+                    onChange={(event) => {
+                      setEditBody(event.target.value);
+                    }}
+                    value={editBody}
+                    multiline
+                    rows={4}
+                    fullWidth
+                  />
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      m: 2,
+                      p: 1,
+                    }}
+                  >
+                    <Button
+                      onClick={() => {
+                        updateStatus({
+                          ...data,
+                          title: editTitle,
+                          body: editBody,
+                        });
+                        setOpenEditModal(false);
+                        setEditing(false);
+                      }}
+                      variant="outlined"
+                    >
+                      <CheckCircleOutlineIcon></CheckCircleOutlineIcon>Complete
+                    </Button>
+                  </Box>
+                </Box>
+              </Modal>
+
               <Button
                 size="medium"
                 startIcon={<DeleteIcon />}
                 sx={{ color: "red" }}
                 onClick={() => {
-                  setOpenModal(true);
+                  setOpenDeleteModal(true);
                 }}
               >
                 Delete
               </Button>
               <Modal
-                open={openModal}
+                open={openDeleteModal}
                 onClose={() => {
-                  setOpenModal(false);
+                  setOpenDeleteModal(false);
                 }}
                 BackdropProps={{ style: { backgroundColor: "white" } }}
                 sx={{
@@ -219,7 +314,7 @@ const IssueBox = ({ data, title, status, body, labels }) => {
                     onClick={() => {
                       setDeleted(true);
                       updateStatus({ ...data, state: "closed" });
-                      setOpenModal(false);
+                      setOpenDeleteModal(false);
                     }}
                     variant="outlined"
                     color="error"
@@ -229,7 +324,7 @@ const IssueBox = ({ data, title, status, body, labels }) => {
                   </Button>
                   <Button
                     onClick={() => {
-                      setOpenModal(false);
+                      setOpenDeleteModal(false);
                     }}
                     variant="outlined"
                     colo="primary"

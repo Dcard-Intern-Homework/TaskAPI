@@ -32,7 +32,9 @@ function CreateIssueButton() {
 
   return (
     <Box>
-      <Button onClick={handleOpen} color="inherit" variant="outlined">Create Issue</Button>
+      <Button onClick={handleOpen} color="inherit" variant="outlined">
+        Create Issue
+      </Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -100,7 +102,7 @@ export default function NavBar({ handleLogOut }) {
         >
           <SearchBar></SearchBar>
           <CreateIssueButton></CreateIssueButton>
-          
+
           <Button color="inherit" variant="outlined" onClick={handleLogOut}>
             Log Out
           </Button>
