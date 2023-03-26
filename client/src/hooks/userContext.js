@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import useRenderer from "./renderer";
 
-const CLIENT_ID = "4b7feddfcd88aa615d89";
 
 async function getUserData(setUser) {
   await fetch("http://localhost:4000/getUserData", {
@@ -24,7 +23,7 @@ export default function useUser() {
   const [renderer, setRenderer] = useRenderer();
 
   useEffect(() => {
-    localStorage.setItem("CLIENT_ID", CLIENT_ID);
+  
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const codeParams = urlParams.get("code");

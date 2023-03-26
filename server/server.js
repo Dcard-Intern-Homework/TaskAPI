@@ -7,7 +7,7 @@ require('dotenv').config();
 const API_TOKEN = process.env.API_TOKEN
 const CLIENT_SECRET = process.env.CLIENT_SECRET
 
-const CLIENT_ID = "4b7feddfcd88aa615d89";
+const CLIENT_ID = process.env.CLIENT_ID
 
 var app = express();
 app.use(cors());
