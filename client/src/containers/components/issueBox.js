@@ -264,13 +264,18 @@ const IssueBox = ({ data, filter }) => {
                   >
                     <Button
                       onClick={() => {
-                        updateStatus({
-                          ...data,
-                          title: editTitle,
-                          body: editBody,
-                        });
-                        setOpenEditModal(false);
-                        setEditing(false);
+                        if (body.length >= 30) {
+                          updateStatus({
+                            ...data,
+                            title: editTitle,
+                            body: editBody,
+                          });
+                          setOpenEditModal(false);
+                          setEditing(false);
+                        } else {
+                          alert("Title must be at least 30 characters.");
+                        }
+                        
                       }}
                       variant="outlined"
                     >
