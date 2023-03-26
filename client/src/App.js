@@ -1,10 +1,16 @@
-import { useEffect, useState, useContext, createContext, useMemo } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useContext,
+  createContext,
+  useMemo,
+} from "react";
 import LoginPage from "./pages/loginPage";
 import MainPage from "./pages/mainPage";
 import { useTheme, ThemeProvider, createTheme } from "@mui/material/styles";
 import { Button, IconButton, Box, CssBaseline } from "@mui/material";
-import Brightness4Icon from "@mui/icons-material/Brightness4";
-import Brightness7Icon from "@mui/icons-material/Brightness7";
+
 import useUser from "./hooks/userContext";
 import useRenderer from "./hooks/renderer";
 import loginWithGithub from "./hooks/auth";
@@ -20,22 +26,23 @@ const ColorModeContext = createContext({ toggleColorMode: () => {} });
 function App() {
   const [renderer, setRenderer] = useRenderer();
   const [user, setUser] = useUser();
-  const {issues, setIssues} = useIssueContext();
+  const { issues, setIssues } = useIssueContext();
   const theme = useTheme();
   const colorMode = useContext(ColorModeContext);
-
   function handleLogOut() {
     localStorage.removeItem("access_token");
     setRenderer(!renderer);
   }
 
   return (
-    <div
-      onScroll={(event) => {
-        handleScroll(event, issues, setIssues);
-      }}
-    >
-      {!renderer && <Navbar handleLogOut={handleLogOut}></Navbar>}
+    <div >
+      {!renderer && (
+        <Navbar
+          handleLogOut={handleLogOut}
+          theme={theme}
+          colorMode={colorMode}
+        ></Navbar>
+      )}
       <Box
         sx={{
           display: "flex",
@@ -47,19 +54,8 @@ function App() {
           borderRadius: 1,
           p: 3,
         }}
+        
       >
-        <IconButton
-          sx={{ ml: 1 }}
-          onClick={colorMode.toggleColorMode}
-          color="inherit"
-        >
-          {theme.palette.mode === "dark" ? (
-            <Brightness7Icon />
-          ) : (
-            <Brightness4Icon />
-          )}
-        </IconButton>
-
         <Box
           sx={{
             display: "flex",
@@ -109,6 +105,7 @@ export default function ToggleColorMode() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <IssueContextProvider>
+          
           <App />
         </IssueContextProvider>
       </ThemeProvider>

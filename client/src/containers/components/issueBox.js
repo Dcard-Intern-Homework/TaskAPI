@@ -85,7 +85,7 @@ function StateButton({ data, labels, state, setState }) {
 
 function TitleAndBody({ data, editTitle, editBody }) {
   return (
-    <CardContent sx={{ p: 1 }}>
+    <CardContent sx={{ p: 1, width: 500 }}>
       <Box
         sx={{
           display: "flex",
@@ -94,13 +94,14 @@ function TitleAndBody({ data, editTitle, editBody }) {
           gap: 1,
           p: 1,
           height: 50,
+          
         }}
       >
         <Avatar src={data.user.avatar_url}></Avatar>
 
         <Typography variant="h6">{editTitle}</Typography>
       </Box>
-      <Typography sx={{ p: 1 }} variant="body1">
+      <Typography sx={{ p: 1, wordWrap: 'break-word' }} variant="body1">
         {editBody}
       </Typography>
     </CardContent>
@@ -138,6 +139,7 @@ const IssueBox = ({ data, filter }) => {
         bgcolor: "background.paper",
         alignItems: "center",
         margin: 2,
+        
       }}
     >
       <Box
@@ -183,7 +185,7 @@ const IssueBox = ({ data, filter }) => {
             >
               <Button
                 size="medium"
-                variant="outlined"
+                
                 startIcon={<EditIcon />}
                 sx={{ color: "gray" }}
                 onClick={() => {
