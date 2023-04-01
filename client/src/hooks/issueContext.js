@@ -88,7 +88,8 @@ const IssueContext = createContext();
 function IssueContextProvider({ children }) {
   const [issues, setIssues] = useState([]);
   const [search, setSearch] = useState("");
-  const [user, setUser] = useUser();
+  const [renderer, setRenderer] = useState(false);
+  const [user, setUser] = useUser(renderer, setRenderer);
   useEffect(() => {
     if(user)
       {
@@ -97,7 +98,7 @@ function IssueContextProvider({ children }) {
   }, [user]);
   
   return (
-    <IssueContext.Provider value={{ issues, setIssues, search, setSearch }}>
+    <IssueContext.Provider value={{ issues, setIssues, search, setSearch, renderer, setRenderer, user, setUser }}>
       {children}
     </IssueContext.Provider>
   );

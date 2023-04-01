@@ -5,9 +5,8 @@ const fetch = (...args) =>
 var bodyParser = require("body-parser");
 require('dotenv').config();
 const API_TOKEN = process.env.API_TOKEN
-const CLIENT_SECRET = process.env.CLIENT_SECRET
-
-const CLIENT_ID = process.env.CLIENT_ID
+CLIENT_SECRET = "f7385cd8126984315aee792b2f2c38add8c759f4"
+CLIENT_ID = "4b7feddfcd88aa615d89"
 
 var app = express();
 app.use(cors());

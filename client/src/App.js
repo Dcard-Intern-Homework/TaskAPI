@@ -11,8 +11,6 @@ import MainPage from "./pages/mainPage";
 import { useTheme, ThemeProvider, createTheme } from "@mui/material/styles";
 import { Button, IconButton, Box, CssBaseline } from "@mui/material";
 
-import useUser from "./hooks/userContext";
-import useRenderer from "./hooks/renderer";
 import loginWithGithub from "./hooks/auth";
 import Navbar from "./components/navbar";
 import {
@@ -24,11 +22,10 @@ import {
 const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
 function App() {
-  const [renderer, setRenderer] = useRenderer();
-  const [user, setUser] = useUser();
-  const { issues, setIssues } = useIssueContext();
+  const { issues, setIssues, user, renderer, setRenderer } = useIssueContext();
   const theme = useTheme();
   const colorMode = useContext(ColorModeContext);
+
   function handleLogOut() {
     localStorage.removeItem("access_token");
     setRenderer(!renderer);
@@ -36,7 +33,7 @@ function App() {
 
   return (
     <div >
-      {!renderer && (
+      {renderer && (
         <Navbar
           handleLogOut={handleLogOut}
           theme={theme}

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import useRenderer from "./renderer";
+import { useIssueContext } from "./issueContext";
+
 
 
 async function getUserData(setUser) {
@@ -18,9 +19,9 @@ async function getUserData(setUser) {
     });
 }
 
-export default function useUser() {
+export default function useUser(renderer, setRenderer) {
   const [user, setUser] = useState();
-  const [renderer, setRenderer] = useRenderer();
+
 
   useEffect(() => {
   

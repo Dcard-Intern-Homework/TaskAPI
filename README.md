@@ -12,9 +12,10 @@ This project uses Github Issue API and Github search API, as well as Github Auth
 To install and run the project, follow these instructions:
 
 1. Clone the repository:
-
+```
 git clone https://github.com/Dcard-Intern-Homework/TaskAPI.git
 cd TaskAPI
+```
 
 2. Start the frontend:
 ```
@@ -27,13 +28,8 @@ npm start
 cd server
 npm install
 ```
-Before starting the server, create a `.env` file in the `./server` directory and enter the following information:
-
-```json
-CLIENT_ID = <YOUR CLIENT ID>
-CLIENT_SECRET = <YOU SERVER ID>
-```
-4. Create a fine-grained personal access token for the repository you want to edit: https://github.com/settings/developers. After creating the token, create a .env file in the ./server directory and enter the following information:
+Because GitHub current permissions policy for use of GitHub API in apps, before starting, you need to create a fine-grained personal access token for the repository you want to edit: https://github.com/settings/developers. \
+After creating the token, create a .env file in the ./server directory and enter the following information:
 ```json
 API_TOKEN = <YOUR API TOKEN>
 ```
@@ -41,3 +37,5 @@ API_TOKEN = <YOUR API TOKEN>
 ```json
 npm start
 ```
+
+Note that if there's any package not installed when starting, please install the package and restart!
