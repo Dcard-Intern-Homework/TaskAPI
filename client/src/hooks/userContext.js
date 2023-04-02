@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { useIssueContext } from "./issueContext";
 
-
-
 async function getUserData(setUser) {
   await fetch("http://localhost:4000/getUserData", {
     method: "GET",
@@ -19,12 +17,11 @@ async function getUserData(setUser) {
     });
 }
 
-export default function useUser(renderer, setRenderer) {
+export default function useUser() {
   const [user, setUser] = useState();
-
+  const [renderer, setRenderer] = useState(false);
 
   useEffect(() => {
-  
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const codeParams = urlParams.get("code");

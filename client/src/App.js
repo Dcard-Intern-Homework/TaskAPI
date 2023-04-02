@@ -32,8 +32,8 @@ function App() {
   }
 
   return (
-    <div >
-      {renderer && (
+    <div>
+      {localStorage.getItem("access_token") && (
         <Navbar
           handleLogOut={handleLogOut}
           theme={theme}
@@ -51,7 +51,6 @@ function App() {
           borderRadius: 1,
           p: 3,
         }}
-        
       >
         <Box
           sx={{
@@ -102,7 +101,6 @@ export default function ToggleColorMode() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <IssueContextProvider>
-          
           <App />
         </IssueContextProvider>
       </ThemeProvider>

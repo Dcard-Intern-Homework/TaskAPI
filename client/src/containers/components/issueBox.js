@@ -94,14 +94,13 @@ function TitleAndBody({ data, editTitle, editBody }) {
           gap: 1,
           p: 1,
           height: 50,
-          
         }}
       >
         <Avatar src={data.user.avatar_url}></Avatar>
 
         <Typography variant="h6">{editTitle}</Typography>
       </Box>
-      <Typography sx={{ p: 1, wordWrap: 'break-word' }} variant="body1">
+      <Typography sx={{ p: 1, wordWrap: "break-word" }} variant="body1">
         {editBody}
       </Typography>
     </CardContent>
@@ -139,7 +138,6 @@ const IssueBox = ({ data, filter }) => {
         bgcolor: "background.paper",
         alignItems: "center",
         margin: 2,
-        
       }}
     >
       <Box
@@ -185,7 +183,6 @@ const IssueBox = ({ data, filter }) => {
             >
               <Button
                 size="medium"
-                
                 startIcon={<EditIcon />}
                 sx={{ color: "gray" }}
                 onClick={() => {
@@ -275,7 +272,6 @@ const IssueBox = ({ data, filter }) => {
                         } else {
                           alert("Title must be at least 30 characters.");
                         }
-                        
                       }}
                       variant="outlined"
                     >
