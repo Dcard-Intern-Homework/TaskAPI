@@ -1,7 +1,12 @@
+// Import necessary dependencies
 import { createContext, useContext, useState, useEffect } from "react";
 import useUser from "./userContext";
 
+/*--------------Some Functions Utils-------------*/
+
+// Async function to get authenticated user's private issues
 async function getPrivateIssues(issues, setIssues, page) {
+  // Fetch the issues from backend API
   await fetch("http://localhost:4000/getPrivateIssues?page=" + page, {
     method: "GET",
     headers: {
@@ -12,6 +17,7 @@ async function getPrivateIssues(issues, setIssues, page) {
       return response.json();
     })
     .then((data) => {
+      // If there are more issues, add them to the state
       if (data.total_count > issues.length) {
         data.items &&
           setIssues((prev) => {
@@ -22,6 +28,7 @@ async function getPrivateIssues(issues, setIssues, page) {
     });
 }
 
+// Async function to create a new issue and post it to the backend
 async function createIssue({ owner, repo, title, body, state }) {
   const postBody = {
     owner: owner,
@@ -47,6 +54,7 @@ async function createIssue({ owner, repo, title, body, state }) {
     });
 }
 
+// Function to handle delay loading, the tasks will be loaded while scrolling to bottom
 function handleScroll(event, issues, setIssues) {
   const { scrollTop, scrollHeight, clientHeight } = event.target;
   console.log("scrolling");
@@ -55,6 +63,7 @@ function handleScroll(event, issues, setIssues) {
   }
 }
 
+// Async function to update the issues and patch it from the backend server
 async function updateStatus(data, setIssues) {
   await fetch("http://localhost:4000/patchData", {
     method: "PATCH",
@@ -74,20 +83,26 @@ async function updateStatus(data, setIssues) {
       console.log(data);
     });
 }
-
+/*------------issue context ----------- */
+// create a new context for the issue data
 const IssueContext = createContext();
 
+// define a provider component that wraps the app and provides access to the issue data through context
 function IssueContextProvider({ children }) {
+  // set up state for issues, search input, renderer, and user
   const [issues, setIssues] = useState([]);
   const [search, setSearch] = useState("");
   const [renderer, setRenderer] = useState(false);
-  const [user, setUser] = useUser();
+  const [user, setUser] = useUser(); // assume this is a custom hook that gets the currently logged in user
+
+  // when the user changes, fetch private issues for the user
   useEffect(() => {
     if (user) {
-      getPrivateIssues(issues, setIssues, issues.length / 10 + 1);
+      getPrivateIssues(issues, setIssues, issues.length / 10 + 1); // assume this is a function that fetches private issues for a given user and page number
     }
   }, [user]);
 
+  // wrap children in the IssueContext.Provider component and provide the issue data and setters as context
   return (
     <IssueContext.Provider
       value={{
@@ -106,6 +121,7 @@ function IssueContextProvider({ children }) {
   );
 }
 
+// define a custom hook that can be used to access the issue data through context
 function useIssueContext() {
   const context = useContext(IssueContext);
   if (context === undefined) {

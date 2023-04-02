@@ -6,7 +6,6 @@ import {
   Box,
   Paper,
   Avatar,
-  Divider,
   Menu,
   MenuItem,
   TextField,
@@ -21,10 +20,12 @@ import { updateStatus } from "../../hooks/issueContext";
 
 import { useState, useEffect } from "react";
 
-function StateButton({ data, labels, state, setState }) {
+function StateButton({ data, state, setState }) {
+  // useState hook to handle the menu state
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
+  // handlers to open and close the menu
   function handleClick(event) {
     setAnchorEl(event.currentTarget);
   }
@@ -33,6 +34,7 @@ function StateButton({ data, labels, state, setState }) {
   }
 
   return (
+    // displays a button and a menu when clicked
     <CardContent sx={{ width: 500, p: 0 }}>
       <Button variant="outlined" onClick={handleClick}>
         {state}
@@ -46,6 +48,7 @@ function StateButton({ data, labels, state, setState }) {
           horizontal: "right",
         }}
       >
+        {/* menu items to change the issue state */}
         <MenuItem
           sx={{ color: "gray" }}
           onClick={() => {
@@ -86,6 +89,7 @@ function StateButton({ data, labels, state, setState }) {
 function TitleAndBody({ data, editTitle, editBody }) {
   return (
     <CardContent sx={{ p: 1, width: 500 }}>
+      {/* displays the issue title and body */}
       <Box
         sx={{
           display: "flex",
@@ -148,14 +152,17 @@ const IssueBox = ({ data, filter }) => {
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "column", p: 2 }}>
+          {/* StateButton component */}
           <StateButton
             data={data}
             labels={labels}
             state={state}
             setState={setState}
           />
+          {/* TitleAndBody component */}
           <TitleAndBody data={data} editTitle={editTitle} editBody={editBody} />
         </Box>
+
         <Box
           sx={{
             display: "flex",
@@ -164,6 +171,7 @@ const IssueBox = ({ data, filter }) => {
             justifyContent: "center",
           }}
         >
+          {/* Edit and Delete buttons */}
           <CardContent
             sx={{
               display: "flex",
@@ -181,6 +189,7 @@ const IssueBox = ({ data, filter }) => {
                 flexDirection: "column",
               }}
             >
+              {/* Edit button */}
               <Button
                 size="medium"
                 startIcon={<EditIcon />}
@@ -192,6 +201,7 @@ const IssueBox = ({ data, filter }) => {
               >
                 Edit
               </Button>
+              {/* Edit modal */}
               <Modal
                 open={openEditModal}
                 onClose={() => {
@@ -280,6 +290,7 @@ const IssueBox = ({ data, filter }) => {
                   </Box>
                 </Box>
               </Modal>
+              {/* Delete button */}
 
               <Button
                 size="medium"
@@ -291,6 +302,7 @@ const IssueBox = ({ data, filter }) => {
               >
                 Delete
               </Button>
+              {/* Delete modal */}
               <Modal
                 open={openDeleteModal}
                 onClose={() => {

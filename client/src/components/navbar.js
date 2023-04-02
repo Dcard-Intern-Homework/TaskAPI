@@ -147,7 +147,7 @@ function CreateIssueButton() {
 }
 
 function SearchBar({}) {
-  const { search, setSearch } = useIssueContext();
+  const { setSearch } = useIssueContext();
   const [input, setInput] = useState("");
   function handleSearch() {
     setSearch(input);

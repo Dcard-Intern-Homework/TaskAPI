@@ -1,7 +1,7 @@
-import { Button, Box } from "@mui/material";
+import { Box } from "@mui/material";
 import StackedBox from "../containers/stackedBox";
-import { useIssue } from "../hooks/issueContext";
-const MainPage = ({ handleLogOut }) => {
+
+const MainPage = () => {
   return (
     <Box>
       <StackedBox />

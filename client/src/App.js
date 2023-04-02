@@ -1,28 +1,29 @@
-import {
-  useEffect,
-  useRef,
-  useState,
-  useContext,
-  createContext,
-  useMemo,
-} from "react";
+import { useState, useContext, createContext, useMemo } from "react";
 import LoginPage from "./pages/loginPage";
 import MainPage from "./pages/mainPage";
 import { useTheme, ThemeProvider, createTheme } from "@mui/material/styles";
-import { Button, IconButton, Box, CssBaseline } from "@mui/material";
+import { Box, CssBaseline } from "@mui/material";
 
 import loginWithGithub from "./hooks/auth";
 import Navbar from "./components/navbar";
-import {
-  IssueContextProvider,
-  handleScroll,
-  useIssueContext,
-} from "./hooks/issueContext";
+import { IssueContextProvider, useIssueContext } from "./hooks/issueContext";
 
+//the color mode context, which handle the theme color
 const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
+const style = {
+  display: "flex",
+  width: "100%",
+  alignItems: "center",
+  justifyContent: "center",
+  bgcolor: "background.default",
+  color: "text.primary",
+  borderRadius: 1,
+  p: 3,
+};
+
 function App() {
-  const { issues, setIssues, user, renderer, setRenderer } = useIssueContext();
+  const { renderer, setRenderer } = useIssueContext();
   const theme = useTheme();
   const colorMode = useContext(ColorModeContext);
 
@@ -32,7 +33,7 @@ function App() {
   }
 
   return (
-    <div>
+    <>
       {localStorage.getItem("access_token") && (
         <Navbar
           handleLogOut={handleLogOut}
@@ -40,30 +41,8 @@ function App() {
           colorMode={colorMode}
         ></Navbar>
       )}
-      <Box
-        sx={{
-          display: "flex",
-          width: "100%",
-          alignItems: "center",
-          justifyContent: "center",
-          bgcolor: "background.default",
-          color: "text.primary",
-          borderRadius: 1,
-          p: 3,
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            width: "100%",
-            alignItems: "center",
-            justifyContent: "center",
-            bgcolor: "background.default",
-            color: "text.primary",
-            borderRadius: 1,
-            p: 3,
-          }}
-        >
+      <Box sx={style}>
+        <Box sx={style}>
           {localStorage.getItem("access_token") ? (
             <MainPage handleLogOut={handleLogOut} />
           ) : (
@@ -71,10 +50,11 @@ function App() {
           )}
         </Box>
       </Box>
-    </div>
+    </>
   );
 }
 
+//export the themed app with color mode
 export default function ToggleColorMode() {
   const [mode, setMode] = useState("light");
   const colorMode = useMemo(

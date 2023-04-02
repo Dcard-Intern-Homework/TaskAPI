@@ -7,7 +7,9 @@ import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Box from "@mui/material/Box";
 
-export default function ButtonNav({ filter, setFilter }) {
+// Component for rendering button navigation bar
+// Takes a prop called setFilter to update the filter state
+export default function ButtonNav({ setFilter }) {
   return (
     <Box
       sx={{
@@ -15,22 +17,26 @@ export default function ButtonNav({ filter, setFilter }) {
         flexDirection: "column",
         alignItems: "center",
         "& > *": {
-          m: 1,
+          m: 1, // Adds margin to all direct child elements of Box component
         },
       }}
     >
       <ButtonGroup variant="outlined">
+        {/* Button to display all items */}
         <Button onClick={() => setFilter(0)}>
           <FormatListBulletedIcon /> All
         </Button>
+        {/* Button to display open items */}
         <Button onClick={() => setFilter(1)}>
           <AssignmentLateIcon />
           Open
         </Button>
+        {/* Button to display items in progress */}
         <Button onClick={() => setFilter(2)}>
           <ListAltIcon />
           In Progress
         </Button>
+        {/* Button to display completed items */}
         <Button
           onClick={() => {
             setFilter(3);

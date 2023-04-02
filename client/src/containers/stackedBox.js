@@ -28,6 +28,7 @@ const StackedBox = () => {
   return (
     <Box>
       <ButtonNav filter={filter} setFilter={setFilter} />
+      {/* filtering and query the issues */}
       {issues
         .filter((d) => {
           if (filter === 0) {
