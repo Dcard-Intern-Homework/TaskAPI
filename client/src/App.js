@@ -50,6 +50,19 @@ function App() {
           )}
         </Box>
       </Box>
+      <div
+        id="watermark"
+        style={{
+          position: "fixed",
+          right: "10px",
+          bottom: "10px",
+          fontSize: "12px",
+          fontStyle: "italic",
+          color: "#aaa",
+        }}
+      >
+        Copyright &copy; 2023 You Ming-Yeh
+      </div>
     </>
   );
 }
